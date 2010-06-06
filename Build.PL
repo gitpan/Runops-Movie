@@ -1,8 +1,35 @@
-#!/usr/bin/perl
+#!perl
 use 5.010_000;
 use strict;
 use warnings;
 use Module::Build 0.26;
+use Cwd ();
+use File::Spec ();
+use File::Temp ();
+
+{
+    my ( $fh, $name ) = File::Temp::tempfile(
+        SUFFIX => '.mp4',
+        UNLINK => 1,
+    );
+
+    my $cwd = Cwd::cwd();
+    my $frames = File::Spec->catfile(
+        $cwd,
+        'data',
+        'frame-%06d.png',
+    );
+    my $cmd = "ffmpeg -y -v 0 -qscale 5 -r 20 -b 9600 -i $frames $name";
+    say "Testing: $cmd";
+    system $cmd;
+
+    if ( $?
+         || ( $^O eq 'MSWin32'
+              && $^E ) ) {
+        say "Runops::Movie ffmpeg is required to use this module, please install it manually.";
+        exit 0;
+    }
+}
 
 my $build = Module::Build->new(
     module_name => 'Runops::Movie',
@@ -14,6 +41,9 @@ my $build = Module::Build->new(
     requires => {
         perl                    => '5.10.0',
 
+        'ExtUtils::CBuilder'    => 0,
+
+        'Carp::Always'          => 0,
         'Runops::Trace'         => 0,
         'Internals::DumpArenas' => '0.08',
         'autodie'               => 0,
@@ -21,12 +51,13 @@ my $build = Module::Build->new(
         'IPC::System::Simple'   => 0,
         'Judy'                  => '0.13',
         'Inline::C'             => 0,
+        'Imager'                => 0,
 
         # while Judy depends on Alien::Judy, I also use Judy.h directly from
         # Inline::C so I want to ensure that Judy.h is specifically available.
         'Alien::Judy'           => 0,
 
-        # Also depend on bunzip2, ffmpeg, and whatever ffmpeg wants
+        # Also depend on ffmpeg, and whatever ffmpeg wants
     },
     script_files => [
         # Captures a frame stream from a program and renders it to movie

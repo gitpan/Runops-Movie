@@ -61,7 +61,8 @@ sub _init
                         file  => $self->{FONT_FILE},
                         color => $self->{SOLID_FONT},
                         aa    => 1,
-                        type  => 'ft2' );
+                        type  => 'ft2' )
+       or die $Imager::ERRSTR;
 
    # for profiling: 
    $self->{font_iters} = 0;
@@ -71,7 +72,8 @@ sub save
 {
    my $self = shift;
    my ( $filename ) = @_;
-   $self->{IMAGE}->write( file=>$filename );
+   $self->{IMAGE}->write( file=>$filename )
+       or die $self->{IMAGE}{ERRSTR};
    return 1;
 }
 
@@ -94,7 +96,8 @@ sub rect
                         ymin   => $y1, 
                         xmax   => $x2, 
                         ymax   => $y2, 
-                        filled => 1      );
+                        filled => 1      )
+       or die $self->{IMAGE}{ERRSTR};
                         
    return 1 if ( $area < 3 );
 
@@ -104,7 +107,8 @@ sub rect
                         ymin   => $y1, 
                         xmax   => $x2, 
                         ymax   => $y2, 
-                        filled => 0      );
+                        filled => 0      )
+       or die $self->{IMAGE}{ERRSTR};
 
    return 1;
 }
@@ -169,7 +173,8 @@ sub text
                            color => $self->{ALPHA_FONT},
                            size  => $size           );
 
-      $self->{IMAGE}->rubthrough( src => $self->{ALPHA}, tx=>$x, ty=>$y );
+      $self->{IMAGE}->rubthrough( src => $self->{ALPHA}, tx=>$x, ty=>$y )
+	  or die $self->{IMAGE}{ERRSTR};
    }
    else
    {
@@ -188,7 +193,9 @@ sub text
                            x     => $x, 
                            y     => $y, 
                            color => $self->{SOLID_FONT},
-                           size  => $size           );
+                           size  => $size           )
+       or die $self->{IMAGE}{ERRSTR};
+
    }
    return 1;
 }

@@ -14,7 +14,7 @@ provides:
     file: lib/Devel/Movie.pm
   Runops::Movie:
     file: lib/Runops/Movie.pm
-    version: 0.02
+    version: 0.03
   Runops::Movie::TM:
     file: lib/Runops/Movie/TM.pm
     version: 0.02
@@ -53,8 +53,11 @@ provides:
     file: lib/Runops/Movie/Util.pm
 requires:
   Alien::Judy: 0
+  Carp::Always: 0
+  ExtUtils::CBuilder: 0
   IPC::Run: 0
   IPC::System::Simple: 0
+  Imager: 0
   Inline::C: 0
   Internals::DumpArenas: 0.08
   Judy: 0.13
@@ -63,4 +66,4 @@ requires:
   perl: v5.10.0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.02
+version: 0.03
